@@ -1,0 +1,27 @@
+nav a[href="#"]{
+    text-decoration: none;
+    color: #FF8F00;
+    border: 2px solid black;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.227);
+    border-radius: 5px;
+}
+nav a:hover{
+    border-bottom: 5px solid black;
+    border-radius: 10px;
+}
+.movies, .favs{
+    background-image: url("https://www.joanmira.com/blog/1001-movies-to-watch-before-you-die/images/pelis_touhm1.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-color: #000000;
+    
+}
+.banMovies{
+    background-image: url("https://i.blogs.es/418d81/carteles-peliculas-nolan/1366_521.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-radius: 150px;
+}
