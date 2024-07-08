@@ -8,8 +8,8 @@ let divCreado = document.getElementById("contenedor");
 
 function estructuraCard(nombre, foto, genero, descripcion) {
     return `
-        <article class="w-1/5 p-2 border-black border-2 rounded-lg bg-[#26355d24]">
-            <img src="${foto}" alt="${nombre}" class="card-img w-full h-48 justify-center  rounded-3xl">
+        <article class="w-1/5 p-2 border-black border-2 rounded-lg bg-[#ffffff8e] shadow-xl">
+            <img src="${foto}" alt="${nombre}" class="card-img w-full h-48 justify-center  rounded-3xl shadow-xl">
             <h2 class="card-title text-center font-bold border-b-2 border-[#ff910058]">${nombre}</h2>
             <h3 class="card-genre text-xs pl-2 font-bold text-center">${genero}</h3>
             <p class="card-description text-1xl pl-2 pt-2 text-[#000000]">${descripcion}</p>
