@@ -4,14 +4,18 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Tailwind CSS CDN (Considera usar Tailwind CLI o PostCSS plugin para producción) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../styles/styles.css" />
-    <link rel="shortcut icon" href="../Recursos Moviestack/Moviestack_favicon.png" type="image/x-icon" />
-
+    <!-- Verifica que styles.css esté en la ruta correcta y sirviendo con el tipo MIME correcto -->
+    <link rel="stylesheet" href="./styles.css" />
+    <!-- Verifica la ruta del favicon -->
+    <link rel="shortcut icon" href="../Recursos%20Moviestack/Moviestack_favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="../styles/styles.css">
     <title>Movie Stack</title>
 </head>
 
-<body>
+<body class="bg-gray-200">
+    
     <header class="flex w-full bg-[#6D38E0] h-28">
         <div class="logo bg-black-400 flex w-1/2 ">
             <a href="../index.html"><img src="../Recursos Moviestack/Moviestack_isotipo.png" alt=""
@@ -21,30 +25,23 @@
 
         <nav class="w-1/2 flex justify-end items-center">
             <a class="text-white font-['Poppins'] mr-20 text-3xl" href="../index.html">HOME</a>
-            <a class="text-white font-['Poppins'] mr-20 text-3xl" href="#">MOVIES</a>
+            <a class="text-white font-['Poppins'] mr-20 text-3xl" href="./movies.html">MOVIES</a>
             <a class="text-white font-['Poppins'] mr-20 text-3xl" href="./favs.html">FAVS</a>
         </nav>
     </header>
-    <main class="bg-[#D2CCFF]">
-        <div id="contenedorr" class="w-full p-10 ">
 
-            <div class="banMovies h-60">
-                <div class="p-28 w-full flex">
-                    <h2 class="text-3xl font-bold text-center text-yellow-50 p-2  w-full bg-[#000000c5] rounded-3xl">
-                        MOVIES
-                    </h2>
-                </div>
-            </div>
-
-        </div>
-
-
+     
+        
+    <main class="bg-[#D2CCFF] min-h-screen">
+        <!-- Contenido dinámico de películas se insertará aquí -->
     </main>
+
     <footer class="flex w-full bg-[#6D38E0] h-20">
-        <p class="text-white font-['Poppins'] w-full text-2xl text-center p-5">Ludwing valecillos - Cohort 55</p>
+        <p class="text-white font-['Poppins'] w-full text-3xl text-center p-5">Ludwing Valecillos - Cohort 55</p>
     </footer>
+    <!-- Scripts JS -->
     <script src="../JS/data.js"></script>
-    <script src="../JS/index.js"></script>
+    <script src="../JS/details.js"></script>
 </body>
 
 </html>
