@@ -12,14 +12,15 @@ selector.className = "p-2 border-black border-2 rounded-lg bg-[#ffffff5d] md:w-1
 const crearSelect = (movies) => {
   const listaGeneros = (movies) => {
     let listaGeneros = [...new Set(movies.flatMap(movies => movies.genres))].toSorted();
+    console.log(movies.flatMap(movies => movies.genres));
     return listaGeneros;
   };
 
   const lista = listaGeneros(movies);
   let selectHTML = `<option value="all">Genre</option>`;
 
-  lista.forEach((movie) => {
-    selectHTML += `<option value="${movie}">${movie}</option>`;
+  lista.forEach((genero) => {
+    selectHTML += `<option value="${genero}">${genero}</option>`;
   });
   
 
@@ -42,7 +43,7 @@ main.appendChild(divFiltros);
 
 let contenedorDiv = document.createElement("div");
 contenedorDiv.id = "contenedor";
-contenedorDiv.className = " px-10 flex flex-wrap w-full gap-2 justify-center";
+contenedorDiv.className = " px-10 flex flex-wrap w-full gap-2 justify-center min-h-screen";
 
 const crearCard = (peliculas) => {
   let cardsHTML = "";
@@ -77,11 +78,14 @@ const aplicarFiltros = () => {
     
     return matchesGenre && matchesSearchTerm;
   });
-  console.log(peliculasFiltradas);
+
+
   if(peliculasFiltradas.length > 0){
 
   contenedorDiv.innerHTML = crearCard(peliculasFiltradas);
+  
 }else{
+
   contenedorDiv.innerHTML = `<h2 class="text-3xl font-bold">No se encontraron resultados</h2>`
 }
 };
