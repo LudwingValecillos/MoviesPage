@@ -7,6 +7,8 @@ divFiltros.className = "flex flex-wrap w-full justify-center gap-2 pb-10";
 //--------------------------------------------------------------
 
 const selector = document.createElement("select");
+selector.className = "p-2 border-black border-2 rounded-lg bg-[#ffffff5d] md:w-1/5";
+
 const crearSelect = (movies) => {
   const listaGeneros = (movies) => {
     let listaGeneros = [...new Set(movies.flatMap(movies => movies.genres))].toSorted();
@@ -29,8 +31,7 @@ divFiltros.appendChild(selector);  //SELECTOR
 
 
 const buscador = document.createElement("input");
-selector.className = "w-1/5 p-2 border-black border-2 rounded-lg bg-[#ffffff5d]";
-buscador.className = "w-1/5 p-2 border-black border-2 rounded-lg bg-[#ffffff5d]";
+buscador.className = "p-2 border-black border-2 rounded-lg bg-[#ffffff5d] md:w-1/5";
 buscador.type = "text";
 buscador.placeholder = "Search Movie"; 
 
