@@ -4,39 +4,6 @@ main.className = "p-10 bg-[#D2CCFF] ";
 const divContenedor = document.createElement("div");
 divContenedor.className = "w-full flex flex-wrap gap-10  justify-center"
 
-const divFiltros = document.createElement("div");
-divFiltros.id = "divFiltros";
-divFiltros.className = "flex flex-wrap w-full justify-center gap-2 pb-10";
-
-const crearFiltros = (movies) =>{
-
-    const listaGeneros  = []
-    const selector = document.createElement("select");
-    selector.className = "w-1/5 p-2 border-black border-2 rounded-lg bg-[#ffffff5d]";
-    selector.innerHTML = `<option value="all">Geners</option>`
-    movies.forEach(generos => {
-        generos.genres.forEach(genero => {
-            if(!listaGeneros.includes(genero)){
-                listaGeneros.push(genero)
-                selector.innerHTML += `<option value="${genero}">${genero}</option>`
-            }
-        })
-    });
-
-    const input = document.createElement("input");
-    input.type = "text";
-    input.placeholder = "Search Movie"
-    input.className = "w-1/5 p-2 border-black border-2 rounded-lg bg-[#ffffff5d]";
-    
-    divFiltros.appendChild(input);
-    divFiltros.appendChild(selector);
-    divContenedor.appendChild(divFiltros)
-}
-crearFiltros(movies)
-
-
-
-
 const crearCard = (peliculas) => {
 
     let cardsHTML = "";
@@ -56,5 +23,9 @@ crearCard(movies)
 
 main.appendChild(divContenedor);
 
+
+const divDeFiltros = document.createElement("div");
+divDeFiltros.id = "divFiltros";
+divDeFiltros.className = "flex flex-wrap w-full justify-center gap-2 pb-10";
 
 

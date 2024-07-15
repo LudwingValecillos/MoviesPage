@@ -4,15 +4,15 @@ main.className = "p-10 w-full bg-[#D2CCFF]";
 const container = document.createElement("div");
 container.id = "container";
 container.className =
-  "w-full flex h-full p-10 gap-10 bg-[#0000000b] shadow-2xl rounded-2xl";
+  "w-full flex flex-col h-full p-10 gap-10 bg-[#0000000b] shadow-2xl rounded-2xl md:flex-row";
 
 const slideLeft = document.createElement("div");
 slideLeft.id = "slide-left";
-slideLeft.className = "w-1/2 flex flex-col justify-center items-center ";
+slideLeft.className = " flex flex-col justify-center items-center md:w-1/2 ";
 
 const slideRight = document.createElement("div");
 slideRight.id = "slide-right";
-slideRight.className = "w-1/2 flex flex-col";
+slideRight.className = " flex flex-col justify-evenly md:w-1/2";
 
 const peliculaId = () => {
   const id = new URLSearchParams(window.location.search).get("id");
@@ -28,7 +28,7 @@ const crearSlideLeft = (pelicula) => {
   const img = document.createElement("img");
   img.src = pelicula.image;
   img.alt = pelicula.title;
-  img.className = "w-full h-96 rounded-2xl";
+  img.className = "w-full rounded-2xl md:h-96";
 
   slideLeft.appendChild(img);
 
@@ -70,7 +70,7 @@ const crearSlideLeft = (pelicula) => {
 const crearSlideRight = (pelicula) => {
   const title = document.createElement("h2");
   title.textContent = pelicula.title;
-  title.className = "text-4xl font-bold border-b-2 border-[#ff910058]";
+  title.className = "text-4xl font-bold border-b-8 border-[#ff910058] pb-2 text-center";
 
   const tagline = document.createElement("p");
   tagline.textContent = pelicula.tagline;
@@ -78,11 +78,11 @@ const crearSlideRight = (pelicula) => {
 
   const genres = document.createElement("p");
   genres.textContent = "Genres: " + pelicula.genres;
-  genres.className = "text-3xl font-bold mt-5";
+  genres.className = " font-bold mt-5 md:text-3xl";
 
   const overview = document.createElement("p");
   overview.textContent = pelicula.overview;
-  overview.className = "text-2xl my-5";
+  overview.className = "my-5 md:text-2xl";
 
   const table = (pelicula) => {
     return `
