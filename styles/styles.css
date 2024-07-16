@@ -40,3 +40,8 @@ article:hover{
 -moz-box-shadow: 7px 7px 32px 0px rgba(0,0,0,0.38);
 box-shadow: 7px 7px 32px 0px rgba(0,0,0,0.38);
 }
+
+.corazon{
+    width: 20px;
+    height: 20px;
+}
