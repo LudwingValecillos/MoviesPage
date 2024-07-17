@@ -13,20 +13,46 @@ slideLeft.className = " flex flex-col justify-center items-center md:w-1/2 ";
 const slideRight = document.createElement("div");
 slideRight.id = "slide-right";
 slideRight.className = " flex flex-col justify-evenly md:w-1/2";
+//---------------------------------------
 
-const peliculaId = () => {
+const API_KEY = "0ff70d54-dc0b-4262-9c3d-776cb0f34dbd";
+
+let movies = [];
+fetch(`https://moviestack.onrender.com/api/movies`, {
+    headers: {
+        'x-api-key': API_KEY
+    }
+})
+.then(response => response.json())
+.then(data => {
+  console.log(data.movies);
+  peliculaId(data.movies)
+})
+.catch(error => {
+    console.error("Error fetching movies:", error);
+});
+
+//------------------------------------
+const peliculaId = (pelis) => {
   const id = new URLSearchParams(window.location.search).get("id");
   const findMovieById = (movies, id) => {
     return movies.find((movie) => movie.id === id);
   };
-  return findMovieById(movies, id);
+  const pelicula = findMovieById(pelis, id);
+  console.log(pelicula);
+
+  crearSlideLeft(pelicula);
+
+  crearSlideRight(pelicula);
+  
+  main.appendChild(container);
 };
 
-const pelicula = peliculaId();
+
 
 const crearSlideLeft = (pelicula) => {
   const img = document.createElement("img");
-  img.src = pelicula.image;
+  img.src = `https://moviestack.onrender.com/static/${pelicula.image}` 
   img.alt = pelicula.title;
   img.className = "w-full rounded-2xl md:h-96";
 
@@ -116,8 +142,8 @@ const crearSlideRight = (pelicula) => {
   container.appendChild(slideRight);
 };
 
-crearSlideLeft(pelicula);
+// crearSlideLeft(pelicula);
 
-crearSlideRight(pelicula);
+// crearSlideRight(pelicula);
 
-main.appendChild(container);
+
