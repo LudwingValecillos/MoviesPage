@@ -3,8 +3,7 @@ const API_KEY = "0ff70d54-dc0b-4262-9c3d-776cb0f34dbd";
 let movies = [];
 
 // Función para obtener las películas
-function fetchMovies() {
-    return fetch(`https://moviestack.onrender.com/api/movies`, {
+fetch(`https://moviestack.onrender.com/api/movies`, {
         headers: {
             'x-api-key': API_KEY
         }
@@ -12,25 +11,12 @@ function fetchMovies() {
     .then(response => response.json())
     .then(data => {
         movies = data.movies;
-        return movies; // Devuelve las películas para que puedan ser usadas en el siguiente `.then`
+        crearSelect(movies);
+        aplicarFiltros()
     })
     .catch(error => {
         console.error("Error fetching movies:", error);
     });
-}
-
-// Función para usar las películas una vez que han sido cargadas
-function useMovies() {
-    fetchMovies().then(movies => {
-        // Aquí puedes trabajar con `movies`, ya que ahora tiene datos
-        console.log(movies);
-        
-        crearSelect(movies);
-        aplicarFiltros(); // Aplicar filtros inicialmente para mostrar todas las películas
-    });
-}
-useMovies();
-
 
 
 //--------------------------------------------------------------
@@ -98,7 +84,7 @@ const crearCard = (peliculas) => {
           <img src="https://moviestack.onrender.com/static/${pelicula.image}" alt="${pelicula.title}" class="card-img w-full h-48 justify-center rounded-3xl">
           <h2 class="card-title text-center font-bold border-b-2 border-[#ff910058]">${pelicula.title}</h2>
           <h3 class="card-genre text-xs pl-2 font-bold text-center">${pelicula.genres.join(", ")}</h3>
-          <p class="card-description text-1xl pl-2 pt-2 text-[#000000]">${pelicula.overview}</p>
+          <p class="card-description text-[13px] pl-2 pt-2 text-[#000000]">${pelicula.overview}</p>
         </a>
       </article>
     `;
@@ -158,6 +144,7 @@ const addHeartEventListeners = () => {
 
 const toggleHeart = (e) => {
   const corazon = e.target;
+  console.log(e.target);
   if (corazon.src.includes("corazonVacio.png")) {
     corazon.src = "../Recursos Moviestack/corazonRelleno.png";
     favoritos.push(corazon.id);
