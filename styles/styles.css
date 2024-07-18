@@ -45,3 +45,6 @@ box-shadow: 7px 7px 32px 0px rgba(0,0,0,0.38);
     width: 20px;
     height: 20px;
 }
+.corazon:hover{
+    width: 25px;
+}
