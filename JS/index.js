@@ -4,81 +4,42 @@ let movies = [];
 
 // Función para obtener las películas
 fetch(`https://moviestack.onrender.com/api/movies`, {
-        headers: {
-            'x-api-key': API_KEY
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        movies = data.movies;
-        crearSelect(movies);
-        aplicarFiltros()
-    })
-    .catch(error => {
-        console.error("Error fetching movies:", error);
-    });
-
+  headers: {
+    "x-api-key": API_KEY,
+  },
+})
+  .then((response) => response.json())
+  .then((data) => {
+    movies = data.movies;
+    crearFiltros(movies);
+    crearCard(movies);
+  })
+  .catch((error) => {
+    console.error("Error fetching movies:", error);
+  });
 
 //--------------------------------------------------------------
 
+
 let main = document.querySelector("main");
-const divFiltros = document.createElement("div");
-divFiltros.id = "divFiltros";
-divFiltros.className = "flex flex-wrap w-full justify-center gap-2 pb-10";
 
-const selector = document.createElement("select");
-selector.className = "p-2 border-black border-2 rounded-lg bg-[#ffffff5d] md:w-1/5";
-
-const listaGeneros = (movies) => {
-    let listaGeneros = [...new Set(movies.flatMap(movie => movie.genres))].sort();
-    return listaGeneros;
+let buscarfavoritos = () => {
+  let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+  return favoritos;
 };
 
-const crearSelect = (movies) => {
-  const lista = listaGeneros(movies);
-  let selectHTML = `<option value="all">Genre</option>`;
-
-  lista.forEach((genero) => {
-    selectHTML += `<option value="${genero}">${genero}</option>`;
-  });
-  
-  selector.innerHTML = selectHTML;
-  return selectHTML;
-};
-
-divFiltros.appendChild(selector);  //SELECTOR
-
-const buscador = document.createElement("input");
-buscador.className = "p-2 border-black border-2 rounded-lg bg-[#ffffff5d] md:w-1/5";
-buscador.type = "text";
-buscador.placeholder = "Search Movie"; 
-
-divFiltros.appendChild(buscador); //BUSCADOR
-
-main.appendChild(divFiltros);
-
-//--------------------------------------------
-let contenedorDiv = document.createElement("div");
-contenedorDiv.id = "contenedor";
-contenedorDiv.className = "px-10 flex flex-wrap w-full gap-2 justify-center min-h-screen";
-
-
-let favoritos;
-if (localStorage.getItem("favoritos")) {
-    favoritos = JSON.parse(localStorage.getItem("favoritos"))
-    console.log(favoritos);
-
-} else {
-    favoritos = []
-}
 const crearCard = (peliculas) => {
-  let cardsHTML = "";
-  
+  let contenedorDiv = document.querySelector("#contenedor");
+
+    contenedorDiv.className = "px-10 flex flex-wrap w-full gap-2 justify-center min-h-screen";
+    contenedorDiv.innerHTML = ""; // Limpiar las tarjetas existentes
+
+  let favoritos = buscarfavoritos();
   peliculas.forEach((pelicula) => {
-    cardsHTML += `
-      <article class="p-2 border-black border-2 rounded-lg bg-[#ffffff5d] md:w-1/5">
+    let cardHTML = `
+      <article class="p-2 border-black border-2 rounded-lg bg-[#ffffff5d] md:w-80 ">
         <div class="flex items-end justify-end cursor-pointer">
-          <img src="${favoritos.includes(pelicula.id) ? "../Recursos Moviestack/corazonRelleno.png" : "../Recursos Moviestack/corazonVacio.png"}" alt="" class="corazon" id="${pelicula.id}" >
+          <img src="${favoritos.includes(pelicula.id) ? "../Recursos Moviestack/corazonRelleno.png" : "../Recursos Moviestack/corazonVacio.png"}" alt="" class="corazon" id="${pelicula.id}">
         </div>
         <a href="./details.html?id=${pelicula.id}">
           <img src="https://moviestack.onrender.com/static/${pelicula.image}" alt="${pelicula.title}" class="card-img w-full h-48 justify-center rounded-3xl">
@@ -88,50 +49,13 @@ const crearCard = (peliculas) => {
         </a>
       </article>
     `;
+    contenedorDiv.innerHTML += cardHTML;
   });
+  main.appendChild(contenedorDiv);
 
-  return cardsHTML;
+
+  addHeartEventListeners();
 };
-
-contenedorDiv.innerHTML = crearCard(movies);
-main.appendChild(contenedorDiv);
-
-
-
-//---------------------------FILTROS-------------------------------------
-
-
-
-const aplicarFiltros = () => {
-  const selectedGenre = selector.value;
-  const searchTerm = buscador.value.toLowerCase();
-
-  const peliculasFiltradas = movies.filter((movie) => {
-    const matchesGenre = selectedGenre === "all" || movie.genres.includes(selectedGenre);
-    const matchesSearchTerm = movie.title.toLowerCase().includes(searchTerm);
-    
-    return matchesGenre && matchesSearchTerm;
-  });
-
-  if (peliculasFiltradas.length > 0) {
-    contenedorDiv.innerHTML = crearCard(peliculasFiltradas);
-    addHeartEventListeners(); // Asegúrate de agregar los event listeners después de crear las tarjetas
-  } else {
-    contenedorDiv.innerHTML = `<h2 class="text-3xl font-bold">No se encontraron resultados</h2>`;
-  }
-};
-
-// Event listeners para los filtros
-selector.addEventListener("change", aplicarFiltros);
-buscador.addEventListener("input", aplicarFiltros);
-
-
-
-
-// Función para agregar event listeners a los corazones------------------------------------------
-
-
-
 
 const addHeartEventListeners = () => {
   const corazones = document.querySelectorAll(".corazon");
@@ -140,23 +64,69 @@ const addHeartEventListeners = () => {
   });
 };
 
-
-
 const toggleHeart = (e) => {
+
+  let favoritos = buscarfavoritos();
   const corazon = e.target;
-  console.log(e.target);
+  
   if (corazon.src.includes("corazonVacio.png")) {
     corazon.src = "../Recursos Moviestack/corazonRelleno.png";
     favoritos.push(corazon.id);
-
-    localStorage.setItem("favoritos", JSON.stringify(favoritos));
-
   } else {
     corazon.src = "../Recursos Moviestack/corazonVacio.png";
-    favoritos.splice(favoritos.indexOf(corazon.id),1);
-    localStorage.setItem("favoritos", JSON.stringify(favoritos));
-    
+    favoritos.splice(favoritos.indexOf(corazon.id), 1);
   }
+  localStorage.setItem("favoritos", JSON.stringify(favoritos));
   console.log(favoritos);
+
 };
 
+const crearFiltros = (movies) => {
+
+  //-----------Crear Div Filtros------------
+
+  const divFiltros = document.createElement("div");
+  divFiltros.id = "divFiltros";
+  divFiltros.className = "flex flex-wrap w-full justify-center gap-2 py-5";
+ 
+  //-----------Crear Select-----------
+
+  const selector = document.createElement("select");
+  selector.className = "p-2 border-black border-2 rounded-lg bg-[#ffffff5d] md:w-1/5";
+
+  let listaGeneros = [...new Set(movies.flatMap((movie) => movie.genres))].sort();
+  let selectHTML = `<option value="all">Genre</option>`;
+  listaGeneros.forEach((genero) => {
+    selectHTML += `<option value="${genero}">${genero}</option>`;
+  });
+  selector.innerHTML = selectHTML;
+  divFiltros.appendChild(selector);
+
+  //-----------Crear Input-----------
+
+  const buscador = document.createElement("input");
+  buscador.className = "p-2 border-black border-2 rounded-lg bg-[#ffffff5d] md:w-1/5";
+  buscador.type = "text";
+  buscador.placeholder = "Search Movie";
+  divFiltros.appendChild(buscador);
+
+  main.appendChild(divFiltros);
+
+  //-----------Funcionalidad-----------
+  const aplicarFiltros = () => {
+    const selectedGenre = selector.value;
+    const searchTerm = buscador.value.toLowerCase();
+
+    const peliculasFiltradas = movies.filter((movie) => {
+      const matchesGenre = selectedGenre === "all" || movie.genres.includes(selectedGenre);
+      const matchesSearchTerm = movie.title.toLowerCase().includes(searchTerm);
+      return matchesGenre && matchesSearchTerm;
+    });
+
+    crearCard(peliculasFiltradas);
+  };
+
+  selector.addEventListener("change", aplicarFiltros);
+  buscador.addEventListener("input", aplicarFiltros);
+};
+export { addHeartEventListeners,  toggleHeart};

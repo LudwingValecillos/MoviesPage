@@ -1,84 +1,36 @@
+// import { addHeartEventListeners, toggleHeart } from './index.js';
+
 const API_KEY = "0ff70d54-dc0b-4262-9c3d-776cb0f34dbd";
-
-let movies = [];
-
-// Función para obtener las películas
-fetch(`https://moviestack.onrender.com/api/movies`, {
-        headers: {
-            'x-api-key': API_KEY
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        movies = data.movies;
-        crearSelect(movies);
-        aplicarFiltros()
-    })
-    .catch(error => {
-        console.error("Error fetching movies:", error);
-    });
-
-
-//--------------------------------------------------------------
-
 let main = document.querySelector("main");
-const divFiltros = document.createElement("div");
-divFiltros.id = "divFiltros";
-divFiltros.className = "flex flex-wrap w-full justify-center gap-2 pb-10";
 
-const selector = document.createElement("select");
-selector.className = "p-2 border-black border-2 rounded-lg bg-[#ffffff5d] md:w-1/5";
+// Función para obtener las películas y filtrar las favoritas
+fetch(`https://moviestack.onrender.com/api/movies`, {
+  headers: {
+    "x-api-key": API_KEY,
+  },
+})
+  .then((response) => response.json())
+  .then((data) => {
+    const movies = data.movies;
 
-const listaGeneros = (movies) => {
-    let listaGeneros = [...new Set(movies.flatMap(movie => movie.genres))].sort();
-    return listaGeneros;
-};
+    const peliculasFavoritas = movies.filter((movie) => JSON.parse(localStorage.getItem("favoritos")).includes(movie.id));
 
-const crearSelect = (movies) => {
-  const lista = listaGeneros(movies);
-  let selectHTML = `<option value="all">Genre</option>`;
-
-  lista.forEach((genero) => {
-    selectHTML += `<option value="${genero}">${genero}</option>`;
+    crearCardFavoritos(peliculasFavoritas);
+  })
+  .catch((error) => {
+    console.error("Error fetching movies:", error);
   });
+
+const crearCardFavoritos = (movies) => {
+  let contenedorDiv = document.querySelector("#contenedorFavs");
+  contenedorDiv.className = "px-10 flex flex-wrap w-full gap-2 justify-center py-2";
+  contenedorDiv.innerHTML = "";
   
-  selector.innerHTML = selectHTML;
-  return selectHTML;
-};
-
-divFiltros.appendChild(selector);  //SELECTOR
-
-const buscador = document.createElement("input");
-buscador.className = "p-2 border-black border-2 rounded-lg bg-[#ffffff5d] md:w-1/5";
-buscador.type = "text";
-buscador.placeholder = "Search Movie"; 
-
-divFiltros.appendChild(buscador); //BUSCADOR
-
-main.appendChild(divFiltros);
-
-//--------------------------------------------
-let contenedorDiv = document.createElement("div");
-contenedorDiv.id = "contenedor";
-contenedorDiv.className = "px-10 flex flex-wrap w-full gap-2 justify-center min-h-screen";
-
-
-let favoritos;
-if (localStorage.getItem("favoritos")) {
-    favoritos = JSON.parse(localStorage.getItem("favoritos"))
-    console.log(favoritos);
-
-} else {
-    favoritos = []
-}
-const crearCard = (peliculas) => {
-  let cardsHTML = "";
-  
-  peliculas.forEach((pelicula) => {
-    cardsHTML += `
-      <article class="p-2 border-black border-2 rounded-lg bg-[#ffffff5d] md:w-1/5">
+  movies.forEach((pelicula) => {
+    let cardHTML = `
+      <article class="p-2 border-black border-2 rounded-lg bg-[#ffffff5d] md:w-80 ">
         <div class="flex items-end justify-end cursor-pointer">
-          <img src="${favoritos.includes(pelicula.id) ? "../Recursos Moviestack/corazonRelleno.png" : "../Recursos Moviestack/corazonVacio.png"}" alt="" class="corazon" id="${pelicula.id}" >
+          <img src="../Recursos Moviestack/corazonRelleno.png" alt="" class="corazon" id="${pelicula.id}">
         </div>
         <a href="./details.html?id=${pelicula.id}">
           <img src="https://moviestack.onrender.com/static/${pelicula.image}" alt="${pelicula.title}" class="card-img w-full h-48 justify-center rounded-3xl">
@@ -88,50 +40,11 @@ const crearCard = (peliculas) => {
         </a>
       </article>
     `;
+    contenedorDiv.innerHTML += cardHTML;
   });
 
-  return cardsHTML;
+  addHeartEventListeners(); // Llama a esta función para agregar los listeners después de crear las tarjetas
 };
-
-contenedorDiv.innerHTML = crearCard(movies);
-main.appendChild(contenedorDiv);
-
-
-
-//---------------------------FILTROS-------------------------------------
-
-
-
-const aplicarFiltros = () => {
-  const selectedGenre = selector.value;
-  const searchTerm = buscador.value.toLowerCase();
-
-  const peliculasFiltradas = movies.filter((movie) => {
-    const matchesGenre = selectedGenre === "all" || movie.genres.includes(selectedGenre);
-    const matchesSearchTerm = movie.title.toLowerCase().includes(searchTerm);
-    
-    return matchesGenre && matchesSearchTerm;
-  });
-
-  if (peliculasFiltradas.length > 0) {
-    contenedorDiv.innerHTML = crearCard(peliculasFiltradas);
-    addHeartEventListeners(); // Asegúrate de agregar los event listeners después de crear las tarjetas
-  } else {
-    contenedorDiv.innerHTML = `<h2 class="text-3xl font-bold">No se encontraron resultados</h2>`;
-  }
-};
-
-// Event listeners para los filtros
-selector.addEventListener("change", aplicarFiltros);
-buscador.addEventListener("input", aplicarFiltros);
-
-
-
-
-// Función para agregar event listeners a los corazones------------------------------------------
-
-
-
 
 const addHeartEventListeners = () => {
   const corazones = document.querySelectorAll(".corazon");
@@ -140,23 +53,25 @@ const addHeartEventListeners = () => {
   });
 };
 
-
-
 const toggleHeart = (e) => {
+  let favoritos = JSON.parse(localStorage.getItem("favoritos"));
   const corazon = e.target;
-  console.log(e.target);
-  if (corazon.src.includes("corazonVacio.png")) {
-    corazon.src = "../Recursos Moviestack/corazonRelleno.png";
-    favoritos.push(corazon.id);
+  favoritos.splice(favoritos.indexOf(corazon.id), 1);
+  localStorage.setItem("favoritos", JSON.stringify(favoritos));
 
-    localStorage.setItem("favoritos", JSON.stringify(favoritos));
-
-  } else {
-    corazon.src = "../Recursos Moviestack/corazonVacio.png";
-    favoritos.splice(favoritos.indexOf(corazon.id),1);
-    localStorage.setItem("favoritos", JSON.stringify(favoritos));
-    
-  }
-  console.log(favoritos);
+  // Re-fetch y actualizar las películas favoritas
+  fetch(`https://moviestack.onrender.com/api/movies`, {
+    headers: {
+      "x-api-key": API_KEY,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const movies = data.movies;
+      const peliculasFavoritas = movies.filter((movie) => favoritos.includes(movie.id));
+      crearCardFavoritos(peliculasFavoritas); // Vuelve a crear las tarjetas con la lista actualizada
+    })
+    .catch((error) => {
+      console.error("Error fetching movies:", error);
+    });
 };
-
