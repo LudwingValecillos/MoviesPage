@@ -34,6 +34,8 @@ fetch(`https://moviestack.onrender.com/api/movies`, {
 
 //------------------------------------
 const peliculaId = (pelis) => {
+ 
+
   const id = new URLSearchParams(window.location.search).get("id");
   const findMovieById = (movies, id) => {
     return movies.find((movie) => movie.id === id);
@@ -51,6 +53,7 @@ const peliculaId = (pelis) => {
 
 
 const crearSlideLeft = (pelicula) => {
+  
   const img = document.createElement("img");
   img.src = `https://moviestack.onrender.com/static/${pelicula.image}` 
   img.alt = pelicula.title;
@@ -94,6 +97,7 @@ const crearSlideLeft = (pelicula) => {
 };
 
 const crearSlideRight = (pelicula) => {
+  
   const title = document.createElement("h2");
   title.textContent = pelicula.title;
   title.className = "text-4xl font-bold border-b-8 border-[#ff910058] pb-2 text-center";
@@ -145,5 +149,4 @@ const crearSlideRight = (pelicula) => {
 // crearSlideLeft(pelicula);
 
 // crearSlideRight(pelicula);
-
 

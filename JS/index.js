@@ -2,7 +2,6 @@ const API_KEY = "0ff70d54-dc0b-4262-9c3d-776cb0f34dbd";
 
 let movies = [];
 
-// Función para obtener las películas
 fetch(`https://moviestack.onrender.com/api/movies`, {
   headers: {
     "x-api-key": API_KEY,
@@ -32,11 +31,11 @@ const crearCard = (peliculas) => {
   let contenedorDiv = document.querySelector("#contenedor");
 
     contenedorDiv.className = "px-10 flex flex-wrap w-full gap-2 justify-center min-h-screen";
-    contenedorDiv.innerHTML = ""; // Limpiar las tarjetas existentes
 
   let favoritos = buscarfavoritos();
+  let cardHTML = "";
   peliculas.forEach((pelicula) => {
-    let cardHTML = `
+     cardHTML += `
       <article class="p-2 border-black border-2 rounded-lg bg-[#ffffff5d] md:w-80 ">
         <div class="flex items-end justify-end cursor-pointer">
           <img src="${favoritos.includes(pelicula.id) ? "../Recursos Moviestack/corazonRelleno.png" : "../Recursos Moviestack/corazonVacio.png"}" alt="" class="corazon" id="${pelicula.id}">
@@ -49,33 +48,40 @@ const crearCard = (peliculas) => {
         </a>
       </article>
     `;
-    contenedorDiv.innerHTML += cardHTML;
+    
   });
+  contenedorDiv.innerHTML = cardHTML;
   main.appendChild(contenedorDiv);
 
 
-  addHeartEventListeners();
+  agregarEvenListenersCorazones();
 };
 
-const addHeartEventListeners = () => {
+const agregarEvenListenersCorazones = () => {
   const corazones = document.querySelectorAll(".corazon");
   corazones.forEach(corazon => {
-    corazon.addEventListener("click", toggleHeart);
+
+    corazon.addEventListener("click", pintarCorazones);
+
   });
 };
 
-const toggleHeart = (e) => {
+const pintarCorazones = (e) => {
 
   let favoritos = buscarfavoritos();
+
   const corazon = e.target;
   
   if (corazon.src.includes("corazonVacio.png")) {
     corazon.src = "../Recursos Moviestack/corazonRelleno.png";
     favoritos.push(corazon.id);
+
   } else {
+
     corazon.src = "../Recursos Moviestack/corazonVacio.png";
     favoritos.splice(favoritos.indexOf(corazon.id), 1);
   }
+  
   localStorage.setItem("favoritos", JSON.stringify(favoritos));
   console.log(favoritos);
 
@@ -112,13 +118,13 @@ const crearFiltros = (movies) => {
 
   main.appendChild(divFiltros);
 
-  //-----------Funcionalidad-----------
+  //-----------Filtros cruzados-----------
   const aplicarFiltros = () => {
     const selectedGenre = selector.value;
     const searchTerm = buscador.value.toLowerCase();
 
     const peliculasFiltradas = movies.filter((movie) => {
-      const matchesGenre = selectedGenre === "all" || movie.genres.includes(selectedGenre);
+      const matchesGenre = selectedGenre === "all" ||movie.genres.includes(selectedGenre); 
       const matchesSearchTerm = movie.title.toLowerCase().includes(searchTerm);
       return matchesGenre && matchesSearchTerm;
     });
@@ -129,4 +135,3 @@ const crearFiltros = (movies) => {
   selector.addEventListener("change", aplicarFiltros);
   buscador.addEventListener("input", aplicarFiltros);
 };
-export { addHeartEventListeners,  toggleHeart};
